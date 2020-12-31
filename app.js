@@ -1,9 +1,13 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var testController = require('./controllers/testController');
-var dataController = require('./controllers/data');
+var express = require('express')
+var path = require('path')
+var cookieParser = require('cookie-parser')
+var logger = require('morgan')
+var testController = require('./controllers/testController')
+var dataController = require('./controllers/data')
+var multer  = require('multer')
+
+var storage = multer.memoryStorage()
+var upload = multer({ storage: storage })
 
 var db = require('./database');
 
@@ -36,12 +40,15 @@ app.route('/stamp')
 	.post(dataController.saveStamp);
 
 app.route('/stampimage')
-	.post(dataController.saveStampImage);
+	.post(upload.single('file'), dataController.saveStampImage);
 
 //app.route('/stamp/:id')
 //	.get(dataController.getIntake);
 
 app.route('/stamps')
 	.get(dataController.getStampList);
+
+app.route('/stampimage')
+	.get(dataController.getStampImage);
 
 module.exports = app;

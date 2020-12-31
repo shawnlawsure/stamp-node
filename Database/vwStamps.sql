@@ -6,6 +6,8 @@ SELECT	id,
 		denomination,
         description,
         year,
-        color
+        color,
+        IF (image IS NULL, False, True) AS has_image,
+        image_type
   FROM	stamp
   

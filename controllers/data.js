@@ -34,16 +34,17 @@ exports.saveStampImage = function(req, res) {
 
 	var con = db.connection();
 
-	console.log(req);
+	console.log(req.body);
+	console.log(req.file);
 
-	res.send("success");
+	//res.send("success");
+	//return;
 
-	return;
-
-	con.query("CALL sp_SaveStampImage(?, ?)",
+	con.query("CALL sp_SaveStampImage(?, ?, ?)",
 		[	
 			req.body.id, 
-			req.body.file, 
+			req.file.buffer,
+			req.file.mimetype
 		], 
 	function (err, data)
 	{
@@ -75,23 +76,25 @@ exports.getStampList = function(req, res) {
 
 		res.json(data);
 	});
-
 };
 
-exports.getIntake = function(req, res) {
+exports.getStampImage = function(req, res) {
 
 	var con = db.connection();
-	con.query("SELECT * FROM vwIntakes WHERE iD = ?", req.params.id, function (err, data)
+	con.query("SELECT image FROM stamp WHERE id = ?", req.query.id, function (err, data)
 	{
 		con.end();
 		
+		console.log(data);
+
 		if (err) 
 		{
 			console.log("Error");
 			throw err;
 		}
 
-		res.json(data);
+		res.send(data[0]);
+		//res.json(data);
 	});
 
 };
